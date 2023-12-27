@@ -1,93 +1,31 @@
 import { useEffect, useState } from "react";
 import { RowType } from "../containers/interface";
-import { useDispatch, useSelector } from "react-redux";
-import { setUserData, users } from "../slice/userSlice";
+import { useSelector } from "react-redux";
+import { users } from "../slice/userSlice";
 import useModal from "../hooks/useModal";
 import EditModal from "./EditModal";
 import { Button, Table, Input } from "antd";
-import * as XLSX from "xlsx";
-
-function convertArrayToObject(arrayOfArrays: RowType[][]) {
-  const [keys, ...data] = arrayOfArrays;
-
-  const result = data.map((values) => {
-    const obj: Record<string, string | number> = {};
-    keys.forEach((key, index) => {
-      //@ts-ignore
-      obj[key as string] = values[index];
-    });
-    return obj;
-  });
-
-  return result;
-}
+import "./UsersList.css";
+import useExcel from "../hooks/useExcel";
+import useHandlers from "../hooks/useHandlers";
 
 const UsersList = () => {
   const allUsersData = useSelector(users) || [];
   const [excelData, setExcelData] =
     useState<Omit<RowType, "edit">[]>(allUsersData);
-  const dispatch = useDispatch();
-  const { handleCancel, handleOk, isModalOpen, showModal } = useModal();
   const [editRowData, setEditRowData] = useState<RowType>();
+
+  const { handleCancel, handleOk, isModalOpen, showModal } = useModal();
+  const { handleFileChange, handleExport } = useExcel(excelData);
+  const { logoutHandler, editClickHandler, deleteClickHandler } = useHandlers({
+    setEditRowData,
+    showModal,
+    allUsersData,
+  });
 
   useEffect(() => {
     setExcelData(allUsersData);
   }, [allUsersData]);
-
-  const editClickHandler = (row: RowType) => {
-    setEditRowData(row);
-    showModal();
-  };
-  const deleteClickHandler = (row: RowType) => {
-    const editedData = allUsersData.filter((d) => d.key !== row.key);
-    dispatch(setUserData({ userData: editedData }));
-  };
-
-  const handleFileChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    if (e?.target?.files == null) {
-      return;
-    }
-
-    const file = e.target.files[0];
-
-    if (!file) {
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      if (!e.target) {
-        return;
-      }
-      const data = new Uint8Array(e.target.result as ArrayBufferLike);
-      const workbook = XLSX.read(data, { type: "array" });
-
-      // Assuming the first sheet is the one you want to work with
-      const sheetName = workbook.SheetNames[0];
-      const sheet = workbook.Sheets[sheetName];
-
-      // Parse the sheet data into an array of objects
-      const parsedData = XLSX.utils.sheet_to_json(sheet, {
-        header: 1,
-      }) as RowType[];
-
-      //@ts-ignore
-      const hello = convertArrayToObject(parsedData);
-      //@ts-ignore
-      setExcelData((prev) => [...prev, ...hello]);
-      dispatch(setUserData({ userData: excelData }));
-    };
-
-    reader.readAsArrayBuffer(file as Blob);
-  };
-
-  const handleExport = () => {
-    // This will export file to system
-    const ws = XLSX.utils.json_to_sheet(excelData);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-    XLSX.writeFile(wb, "exported_data.xlsx");
-  };
 
   const columns = [
     { key: "key", title: "ID", dataIndex: "key" },
@@ -110,7 +48,9 @@ const UsersList = () => {
       title: "",
       dataIndex: "edit",
       render: (_: any, record: any) => (
-        <a onClick={() => editClickHandler(record)}>Edit</a>
+        <a href="#" onClick={() => editClickHandler(record)}>
+          Edit
+        </a>
       ),
     },
     {
@@ -118,24 +58,42 @@ const UsersList = () => {
       title: "",
       dataIndex: "delete",
       render: (_: any, record: any) => (
-        <a onClick={() => deleteClickHandler(record)}>Delete</a>
+        <a href="#" onClick={() => deleteClickHandler(record)}>
+          Delete
+        </a>
       ),
     },
   ];
 
   return (
     <>
-      <Input type="file" title="fileAdd" onChange={handleFileChange} />
-      <Button onClick={handleExport}>Export to Excel</Button>
-      <Table columns={columns} dataSource={excelData} />
-      <Button onClick={showModal}>Create new user</Button>
+      <Button onClick={logoutHandler} className="logout">
+        Logout
+      </Button>
+      <div className="buttons">
+        <Button onClick={showModal} className="create-user">
+          Create new user
+        </Button>
+        <div className="excel-buttons">
+          <Input
+            className="import-input"
+            type="file"
+            title="fileAdd"
+            onChange={handleFileChange}
+            size="middle"
+          />
+          <Button onClick={handleExport} className="export-button">
+            Export to Excel
+          </Button>
+        </div>
+      </div>
+      <Table columns={columns} dataSource={excelData} className="table" />
       <EditModal
         {...{ isModalOpen, handleCancel, handleOk, editRowData }}
         totalRows={allUsersData.length}
       />
     </>
   );
-  return <></>;
 };
 
 export default UsersList;

@@ -21,7 +21,7 @@ const EditModal = ({
   const [form] = useForm();
   useEffect(() => {
     form.setFieldsValue(editRowData);
-  }, [editRowData]);
+  }, [editRowData, form]);
   return (
     <>
       <Modal
@@ -140,7 +140,6 @@ const EditModal = ({
       </Modal>
     </>
   );
-  return <></>;
 };
 
 export default EditModal;

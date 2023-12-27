@@ -1,0 +1,38 @@
+.logout {
+  margin-top: 50px;
+  display: block;
+  margin-left: auto;
+  margin-right: 0;
+  background-color: black;
+  color: white;
+}
+.buttons {
+  margin-top: 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.excel-buttons {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.export-button {
+  background-color: black;
+  color: white;
+}
+.import-input {
+  width: auto;
+  background-color: black;
+  color: white;
+}
+.table {
+  margin-top: 25px;
+}
+.create-user {
+  background-color: black;
+  color: white;
+}
+.ant-table-wrapper .ant-table {
+  background-color: transparent !important;
+}

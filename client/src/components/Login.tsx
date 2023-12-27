@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, Form, Input } from "antd";
 import { useNavigate } from "react-router-dom";
+import "./Login.css";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -16,16 +17,18 @@ const Login = () => {
     fetch(apiUrl, requestOptions)
       .then((response) => response.json())
       .then((data) => {
-        localStorage.setItem("token", data.token);
-        navigate("/users-list");
+        if (data.token) {
+          localStorage.setItem("token", data.token);
+          navigate("/users-list");
+        }
       })
       .catch((error) => console.error("Error:", error));
   };
   return (
     <Form
-      name="basic"
+      labelCol={{ span: 5 }}
       wrapperCol={{ span: 16 }}
-      style={{ maxWidth: 600 }}
+      style={{ maxWidth: 400 }}
       onFinish={onFinish}
       autoComplete="off"
     >
@@ -47,9 +50,11 @@ const Login = () => {
         <Input.Password placeholder="Enter password" />
       </Form.Item>
 
-      <Button type="primary" htmlType="submit">
-        Submit
-      </Button>
+      <Form.Item wrapperCol={{ offset: 4, span: 16 }}>
+        <Button type="primary" htmlType="submit" className="login">
+          Login
+        </Button>
+      </Form.Item>
     </Form>
   );
 };

@@ -1,9 +1,8 @@
 import React from "react";
-import "./App.css";
 import Login from "./components/Login";
 import UsersList from "./components/UsersList";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import PrivateRoutes from "./utils.ts/PrivateRoutes";
+import PrivateRoutes from "./utils/PrivateRoutes";
 
 function App() {
   return (

@@ -1,0 +1,11 @@
+.ant-form {
+  margin: 0 auto;
+  margin-top: 40vh;
+}
+.ant-form-item-control-input {
+  text-align: center;
+}
+.login {
+  background-color: black;
+  color: white;
+}
