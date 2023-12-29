@@ -1,10 +1,15 @@
 import { RowType } from "../containers/interface";
 import { setUserData } from "../slice/userSlice";
 import * as XLSX from "xlsx";
-import { convertArrayToObject } from "../utils/getArrayOfObj";
+import { convertArrayToObject } from "../utils/utils";
 import { useDispatch } from "react-redux";
 
-const useExcel = (excelData: Omit<RowType, "edit">[]) => {
+const useExcel = (
+  excelData: Omit<RowType, "edit">[],
+  setExcelData: () => (
+    value: React.Dispatch<React.SetStateAction<Omit<RowType, "edit">[]>>
+  ) => void
+) => {
   const dispatch = useDispatch();
   const handleFileChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     if (e?.target?.files == null) {

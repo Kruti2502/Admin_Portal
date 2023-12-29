@@ -26,8 +26,6 @@ const useModal = () => {
 
     allUsersData.length < editRowData!.key && editedData.push(editRowData!);
 
-    console.log(editRowData, editedData);
-
     dispatch(setUserData({ userData: editedData }));
   };
 

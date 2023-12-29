@@ -14,3 +14,18 @@ export function convertArrayToObject(arrayOfArrays: RowType[][]) {
 
   return result;
 }
+
+export const initialRawData = {
+  key: 0,
+  first_name: "",
+  last_name: "",
+  email: "",
+  course_name: "",
+  passing_year: "",
+  university_name: "",
+  department: "",
+  job_title: "",
+  company_name: "",
+  contact_no: "",
+  edit: "",
+};

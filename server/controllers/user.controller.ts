@@ -11,9 +11,13 @@ export const createUserController = async (req: Request, res: Response) => {
     const passwordCHeck = password === existingUser!.password;
 
     if (!existingUser)
-      return res.status(404).json({ message: "User not found." });
+      return res
+        .status(404)
+        .json({ isError: true, message: "User not found." });
     if (!passwordCHeck)
-      return res.status(400).json({ message: "Invalid details" });
+      return res
+        .status(400)
+        .json({ isError: true, message: "Invalid details" });
 
     const token = jwt.sign(
       { email: existingUser.email, id: existingUser._id },
@@ -22,8 +26,8 @@ export const createUserController = async (req: Request, res: Response) => {
         expiresIn: "1h",
       }
     );
-    res.status(200).json({ result: existingUser, token });
+    res.status(200).json({ isError: false, result: existingUser, token });
   } catch (error) {
-    res.status(500).json({ return: "Something went wrong" });
+    res.status(500).json({ isError: true, message: "Something went wrong" });
   }
 };

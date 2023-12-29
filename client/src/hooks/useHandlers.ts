@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 interface UseHandlersProps {
-  setEditRowData: (value: React.SetStateAction<RowType | undefined>) => void;
+  setEditRowData: (value: React.SetStateAction<RowType>) => void;
   showModal: () => void;
   allUsersData: Omit<RowType, "edit">[];
 }

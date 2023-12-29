@@ -36,3 +36,6 @@
 .ant-table-wrapper .ant-table {
   background-color: transparent !important;
 }
+.userdetails-modal {
+  width: 800px !important;
+}

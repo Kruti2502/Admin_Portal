@@ -8,15 +8,17 @@ import { Button, Table, Input } from "antd";
 import "./UsersList.css";
 import useExcel from "../hooks/useExcel";
 import useHandlers from "../hooks/useHandlers";
+import { initialRawData } from "../utils/utils";
 
 const UsersList = () => {
   const allUsersData = useSelector(users) || [];
   const [excelData, setExcelData] =
     useState<Omit<RowType, "edit">[]>(allUsersData);
-  const [editRowData, setEditRowData] = useState<RowType>();
+  const [editRowData, setEditRowData] = useState<RowType>(initialRawData);
 
   const { handleCancel, handleOk, isModalOpen, showModal } = useModal();
-  const { handleFileChange, handleExport } = useExcel(excelData);
+  //@ts-ignore
+  const { handleFileChange, handleExport } = useExcel(excelData, setExcelData);
   const { logoutHandler, editClickHandler, deleteClickHandler } = useHandlers({
     setEditRowData,
     showModal,
@@ -89,7 +91,13 @@ const UsersList = () => {
       </div>
       <Table columns={columns} dataSource={excelData} className="table" />
       <EditModal
-        {...{ isModalOpen, handleCancel, handleOk, editRowData }}
+        {...{
+          isModalOpen,
+          handleCancel,
+          handleOk,
+          editRowData,
+          setEditRowData,
+        }}
         totalRows={allUsersData.length}
       />
     </>
